@@ -1,6 +1,6 @@
-import neo4j from 'neo4j-driver'
+import driver from '../config/neo4j.js'
 import constants from '../config/constants.js';
-const driver = neo4j.driver(constants.dbConfig.dbURI, neo4j.auth.basic(constants.dbConfig.dbUser, constants.dbConfig.dbPassword))
+import neo4j from "neo4j-driver"
 
 export default (() => {
   return {

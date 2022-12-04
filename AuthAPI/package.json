@@ -1,7 +1,7 @@
 {
   "name": "authapi",
   "version": "1.0.0",
-  "description": "Auth for College Portal",
+  "description": "Auth for Network App",
   "main": "index.js",
   "type": "module",
   "scripts": {

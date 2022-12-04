@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  reverse-proxy:
+    image: nginx
+    container_name: reverse-proxy
+    ports:
+      - "8888:80"
+    volumes:
+      - ./my-server.conf:/etc/nginx/nginx.conf
+    networks:
+      - nginx_network
+    depends_on:
+      - authapi
+      - networkapi
+      - postapi
+      - commentapi
+      - likesapi
+
+
+
+
   authapi:
     build: ./AuthAPI
     container_name: authapi
@@ -9,7 +28,9 @@ services:
     ports:
       - "1111:1111"
     env_file:
-      - AuthAPI/.env
+      - AuthAPI/.dev.env
+    networks:
+      - nginx_network
 
   networkapi:
     build: ./NetworkAPI
@@ -19,8 +40,10 @@ services:
     ports:
       - "2222:2222"
     env_file:
-      - NetworkAPI/.env
-    
+      - NetworkAPI/.dev.env
+    networks:
+      - nginx_network
+
   postapi:
     build: ./PostAPI
     container_name: postapi
@@ -29,8 +52,10 @@ services:
     ports:
       - "3333:3333"
     env_file:
-      - PostAPI/.env
-  
+      - PostAPI/.dev.env
+    networks:
+      - nginx_network
+
   commentapi:
     build: ./CommentAPI
     container_name: commentapi
@@ -39,7 +64,9 @@ services:
     ports:
       - "4444:4444"
     env_file:
-      - CommentAPI/.env
+      - CommentAPI/.dev.env
+    networks:
+      - nginx_network
 
   likesapi:
     build: ./LikesAPI
@@ -49,7 +76,9 @@ services:
     ports:
       - "5555:5555"
     env_file:
-      - CommentAPI/.env
+      - CommentAPI/.dev.env
+    networks:
+      - nginx_network
 
   postgres:
     image: postgres
@@ -60,6 +89,12 @@ services:
       
     ports:
       - "5432:5432"
+
+    volumes: 
+      - db:/var/lib/postgresql/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nginx_network
 
   neo4j:
     image: neo4j
@@ -74,9 +109,16 @@ services:
     volumes:
       - neo4j_data:/data/
 
+    networks:
+      - nginx_network
+      
 ## volumes to be generated, these are saved somewhere for repeated use by docker
 volumes:
+    db:
+      driver: local
+
     neo4j_data:
 
-
-      
+networks:
+  nginx_network:
+    driver: bridge
