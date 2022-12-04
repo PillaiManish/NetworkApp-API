@@ -1,11 +1,11 @@
 FROM node:latest
 # Create app directory
-WORKDIR /app/authAPI
+WORKDIR /app/commentAPI
 
 COPY package*.json ./
 
 RUN npm install
 COPY . .
 
-EXPOSE 1111
+EXPOSE 4444
 CMD [ "npm", "run", "start"]
