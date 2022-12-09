@@ -38,6 +38,9 @@ const constants = {
     JWT: {
         JWT_SECRET_KEY: process.env.JWT_SECRET_KEY
     },
+    queue: {
+        createNewUser: 'createNewUser'
+    }
 };
 
 export default constants;
