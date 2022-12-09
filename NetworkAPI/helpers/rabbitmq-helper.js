@@ -21,10 +21,10 @@ export default (() => {
     }
 
     return {
-        setUpConnectionPool: () => {
+        setUpConnectionPool: async () => {
             if (!channel) {
                 try {
-                    createInstance();
+                    await createInstance();
                 } catch (err) {
                     throw err;
                 }
@@ -34,18 +34,22 @@ export default (() => {
         readData: async (channelName, data) => {
             if (!channel) {
                 try {
-                    createInstance();
+                    await createInstance();
                 } catch (err) {
                     throw err;
                 }
             }
 
-            await channel.assertQueue(channelName)
-
-            channel.consume(channelName, data => {
-                console.log(`${Buffer.from(data.content)}`)
-                channel.ack(data);
-            })
+            try {
+                await channel.assertQueue(channelName)
+                await channel.consume(channelName, data => {
+                    console.log(`${Buffer.from(data.content)}`)
+                    channel.ack(data);
+                })
+            }
+            catch (err){
+                console.log("Error",err)
+            }
 
         },
 

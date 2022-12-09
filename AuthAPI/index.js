@@ -5,8 +5,8 @@ import jwt from 'jsonwebtoken';
 import authRouter from './routers/auth-router.js';
 import multer from 'multer';
 import pgHelper from './helpers/pg-helper.js';
-import rabbitmqHelper from './helpers/rabbitmq-helper.js';
 import loggerHelper from './helpers/log-helper.js';
+import rabbitmqHelper from './helpers/rabbitmq-helper.js'
 
 const logger = loggerHelper.getInstance({appName: constants.appName});
 
@@ -36,18 +36,7 @@ try {
   });
   process.exit(0);
 }
-
-
-try {
-  rabbitmqHelper.sendData(constants.queue.createNewUser, 324)
-} catch (err) {
-  logger.error({
-      error: err.toString(),
-      message: 'Failed to setUpConnectionPool',
-  });
-  process.exit(0);
-}
-
+rabbitmqHelper.setUpConnectionPool()
 
 app.listen(constants.port, () => {
   console.log(`Listening on port ${constants.port}`)

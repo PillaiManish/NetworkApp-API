@@ -6,6 +6,7 @@ import authRouter from './routers/network-router.js';
 import multer from 'multer';
 import pgHelper from './helpers/pg-helper.js';
 import requestIdentifierMiddleware from './middlewares/request-identifier-middleware.js';
+import rabbitmqHelper from './helpers/rabbitmq-helper.js';
 
 const app = express()
 
@@ -21,7 +22,7 @@ app.use('/api/network', authRouter)
 
 // Dependencies
 // try {
-//   pgHelper.setUpConnectionPool();
+//   rabbitmqHelper.readData('createNewUser');
 // } catch (err) {
 //   logger.error({
 //       error: err.toString(),
@@ -29,6 +30,9 @@ app.use('/api/network', authRouter)
 //   });
 //   process.exit(0);
 // }
+
+// rabbitmqHelper.setUpConnectionPool()
+await rabbitmqHelper.readData('createNewUser')
 
 app.listen(constants.port, () => {
   console.log(`Listening on port ${constants.port}`)

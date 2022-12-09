@@ -4,6 +4,7 @@ import constants from "../config/constants.js";
 import {generateUuid} from "../helpers/common-helper.js";
 import jsonwebtoken from "jsonwebtoken";
 const logger = logHelper.getInstance({appName: constants.appName});
+import rabbitmqHelper from '../helpers/rabbitmq-helper.js'
 
 const loginService = (data, identifier) => {
     return new Promise(async (resolve, reject) => {
@@ -64,6 +65,15 @@ const registerService = (data, identifier) => {
                 traces: [`identifier::${identifier}`, `user::Null`]
             });
             return reject({error: err, type: constants.errorType.INTERNAL_SERVER_ERROR});
+        }
+
+        try {
+            rabbitmqHelper.sendData(constants.queue.createNewUser, newUser.rows[0])
+        } catch (err) {
+            logger.error({
+            error: err.toString(),
+            message: 'Failed to setUpConnectionPool',
+            });
         }
 
         return resolve(true)

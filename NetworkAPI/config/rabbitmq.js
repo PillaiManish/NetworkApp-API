@@ -3,7 +3,6 @@ import loggerHelper from '../helpers/log-helper.js'
 import constants from '../config/constants.js';
 import amqp from "amqplib"
 
-const app = express();
 const logger = loggerHelper.getInstance({appName: constants.appName});
 
 
