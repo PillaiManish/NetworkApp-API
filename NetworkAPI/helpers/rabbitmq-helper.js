@@ -1,6 +1,7 @@
 import loggerHelper from './log-helper.js';
 import constants from '../config/constants.js';
 import amqp from "amqplib"
+import { createUserService } from '../services/network-service.js';
 
 const logger = loggerHelper.getInstance({appName: constants.appName});
 
@@ -43,12 +44,15 @@ export default (() => {
             try {
                 await channel.assertQueue(channelName)
                 await channel.consume(channelName, data => {
-                    console.log(`${Buffer.from(data.content)}`)
+                    if (channelName == 'createNewUser'){
+                        createUserService(JSON.parse(data.content))
+                    }
                     channel.ack(data);
                 })
             }
             catch (err){
                 console.log("Error",err)
+                // throw err
             }
 
         },

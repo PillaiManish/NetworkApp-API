@@ -167,4 +167,32 @@ const listOfFollowerService = (data, identifier)=>{
     })    
 }
 
-export {followService, unfollowService, listOfFollowingService, listOfFollowerService}
+const createUserService = (data)=>{
+    return new Promise(async (resolve, reject) => {
+        let query
+        let params
+
+        query = 'CREATE (newUser:User {username: $username, uuid: $uuid})'
+        params = {
+            uuid: data["uuid"],
+            username: data["username"]
+        };
+
+        let newUser
+        try {
+            newUser = await neo4jHelper.write(query, params)
+        } catch (err) {
+            logger.error({
+                error: err.toString(),
+                errorMessage: err.message,
+                message: 'Failed to create user',
+                traces: [`user::${data['uuid']}`]
+            });
+            return reject({error: err, type: constants.errorType.INTERNAL_SERVER_ERROR});
+        }
+
+        return resolve()
+    })     
+}
+
+export {followService, unfollowService, listOfFollowingService, listOfFollowerService, createUserService}
