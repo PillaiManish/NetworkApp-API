@@ -16,3 +16,5 @@ Other technologies - Redis (for caching), Docker (for containerization)
 
 The project consists of multiple microservices namely, AuthAPI, PostAPI and so on. 
 
+To run the project, download the folder and run the command
+docker-compose up
